@@ -141,3 +141,6 @@ const validateSudoku = (grid) => {
   
   return true; // Solution is valid
 };
+
+// Export the Sudoku solver and validator
+export { solveSudoku, validateSudoku };

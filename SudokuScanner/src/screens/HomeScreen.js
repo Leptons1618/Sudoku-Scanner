@@ -1,12 +1,12 @@
 // src/screens/HomeScreen.js
-import React from 'react';
+import React from 'react'; // Add missing React import
 import {
   SafeAreaView,
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
+  // Image, // Comment out Image import
 } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
@@ -17,13 +17,15 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.subtitle}>Scan, Solve, and Validate Sudoku Puzzles</Text>
       </View>
       
+      {/* Remove image container for now
       <View style={styles.imageContainer}>
         <Image 
-          source={require('../../assets/sudoku-icon.png')} 
+          source={require('../../assets/icon.png')}
           style={styles.image}
           resizeMode="contain"
         />
       </View>
+      */}
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
@@ -71,15 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#7f8c8d',
     marginTop: 8,
-  },
-  imageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: '80%',
-    height: '80%',
   },
   buttonContainer: {
     marginVertical: 30,
