@@ -1,4 +1,5 @@
-# Sudoku-Scanner# Sudoku Scanner App - Setup Guide
+# Sudoku-Scanner
+# Sudoku Scanner App - Setup Guide
 
 This guide will help you set up and run the Sudoku Scanner application using React Native and Expo.
 
