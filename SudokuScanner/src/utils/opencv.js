@@ -1,16 +1,11 @@
 // opencv.js - OpenCV JS Wrapper for React Native
 
-// Import OpenCV from node_modules
-// We'll use a dynamic import to avoid bundling issues
-let cv = null;
+import cv from 'opencv.js';
 
 // Add utility functions to make OpenCV.js work with React Native
 const opencvUtils = {
   // Convert base64 image to OpenCV Mat
   imageToMat: async (base64Image) => {
-    // Ensure OpenCV is loaded
-    if (!cv) await opencvUtils.initializeOpenCV();
-    
     return new Promise((resolve, reject) => {
       try {
         // Remove any data URL prefix
@@ -25,9 +20,12 @@ const opencvUtils = {
           bytes[i] = binaryString.charCodeAt(i);
         }
         
-        // Create a temporary img element and draw to canvas
-        // This approach is more compatible with React Native's environment
+        // Create a Blob from the bytes
+        const blob = new Blob([bytes], { type: 'image/png' });
+        
+        // Create an image element
         const img = new Image();
+        
         img.onload = () => {
           // Create a canvas to draw the image
           const canvas = document.createElement('canvas');
@@ -50,8 +48,7 @@ const opencvUtils = {
           reject(new Error('Failed to load image: ' + error));
         };
         
-        // Create object URL from bytes
-        const blob = new Blob([bytes], { type: 'image/png' });
+        // Load the image from the Blob
         img.src = URL.createObjectURL(blob);
       } catch (error) {
         reject(error);
@@ -62,9 +59,6 @@ const opencvUtils = {
   // Convert OpenCV Mat to base64 image
   matToImage: (mat) => {
     try {
-      // Ensure OpenCV is loaded
-      if (!cv) throw new Error('OpenCV not initialized');
-      
       // Create a canvas
       const canvas = document.createElement('canvas');
       canvas.width = mat.cols;
@@ -91,39 +85,32 @@ const opencvUtils = {
     }
   },
   
-  // Initialize OpenCV in React Native environment
-  initializeOpenCV: async () => {
-    if (cv) {
-      console.log('OpenCV.js is already initialized');
+  // Install OpenCV.js in React Native environment
+  installOpenCV: async () => {
+    if (typeof cv !== 'undefined') {
+      console.log('OpenCV.js is already installed');
       return cv;
     }
     
-    try {
-      // Import using require with dynamic resolution for React Native
-      const opencv = require('../../node_modules/opencv-wasm/opencv.js');
-      
-      // Wait for initialization
-      return new Promise((resolve) => {
-        opencv.onRuntimeInitialized = () => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://docs.opencv.org/4.5.5/opencv.js';
+      script.async = true;
+      script.onload = () => {
+        console.log('OpenCV.js loaded successfully');
+        cv.onRuntimeInitialized = () => {
           console.log('OpenCV.js runtime initialized');
-          cv = opencv;
           resolve(cv);
         };
-      });
-    } catch (error) {
-      console.error('Failed to initialize OpenCV:', error);
-      throw error;
-    }
+      };
+      script.onerror = (error) => {
+        console.error('Failed to load OpenCV.js:', error);
+        reject(error);
+      };
+      document.body.appendChild(script);
+    });
   }
 };
 
-// Initialize OpenCV on first import
-opencvUtils.initializeOpenCV().catch(console.error);
-
-// Export the utilities
-export { opencvUtils };
-// Export cv as a getter to ensure it's initialized
-export const getCV = async () => {
-  if (!cv) await opencvUtils.initializeOpenCV();
-  return cv;
-};
+// Export the OpenCV instance with utilities
+export { cv, opencvUtils };

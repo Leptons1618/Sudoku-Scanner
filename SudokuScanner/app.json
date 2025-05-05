@@ -4,9 +4,9 @@
     "slug": "sudoku-scanner",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "D:\\Git\\Sudoku-Scanner\\SudokuScanner\\assets\\sudoku-icon.png",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "D:\\Git\\Sudoku-Scanner\\SudokuScanner\\assets\\splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
